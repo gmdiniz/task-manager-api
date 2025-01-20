@@ -1,0 +1,5 @@
+enum TaskStatus {
+    PENDENTE = "PENDENTE",
+    CONCLUIDA = "CONCLUIDA",
+    ATRASADA = "ATRASADA"
+}

@@ -1,6 +1,6 @@
-import express, { Request, Response } from "express";
-
-import RouterHandler from "../entities/routerHandler";
+import express from "express";
+import verifyJWT from "../middlewrares/authenticator";
+import RouterHandler from "../interface/routerHandler";
 
 const router = express.Router();
 
@@ -17,6 +17,6 @@ class UserController {
 
 const usersController = new UserController();
 
-router.get("/:id", usersController.getUserById);
+router.get("/:id", verifyJWT, usersController.getUserById);
 
 export default router;

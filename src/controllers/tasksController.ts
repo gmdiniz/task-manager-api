@@ -1,6 +1,7 @@
 import express from "express";
 
-import RouterHandler from "../entities/routerHandler";
+import RouterHandler from "../interface/routerHandler";
+import verifyJWT from "../middlewrares/authenticator";
 
 const router = express.Router();
 
@@ -17,10 +18,10 @@ class TaskController {
 
 const tasksController = new TaskController();
 
-router.get("/", tasksController.getTasks);
-// router.get('/:id', tasksController.getTaskById)
-// router.post('/', tasksController.createTask)
-// router.put('/:id', tasksController.updateTask)
-// router.delete('/:id', tasksController.deleteTask)
+router.get("/", verifyJWT, tasksController.getTasks);
+// router.get('/:id', verifyJWT, tasksController.getTaskById)
+// router.post('/', verifyJWT, tasksController.createTask)
+// router.put('/:id', verifyJWT, tasksController.updateTask)
+// router.delete('/:id', verifyJWT, tasksController.deleteTask)
 
 export default router;

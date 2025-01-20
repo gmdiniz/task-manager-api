@@ -1,6 +1,6 @@
 import express from "express";
 
-import RouterHandler from "../entities/routerHandler";
+import RouterHandler from "../interface/routerHandler";
 
 const router = express.Router();
 

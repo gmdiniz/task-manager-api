@@ -1,10 +1,12 @@
+import { Status, Priority } from "@prisma/client";
+
 export interface ITask {
   id: number;
   title: string;
   description: string | null;
-  status: string;
-  priority: string;
-  dueDate: Date;
+  status: Status;
+  priority: Priority;
+  dueDate: Date | null;
   createdAt: Date;
   updatedAt: Date;
   userId: number;
@@ -14,9 +16,9 @@ export class TaskDTO implements ITask {
   id: number;
   title: string;
   description: string | null;
-  status: string;
-  priority: string;
-  dueDate: Date;
+  status: Status;
+  priority: Priority;
+  dueDate: Date | null;
   createdAt: Date;
   updatedAt: Date;
   userId: number;

@@ -4,7 +4,9 @@ import { IUser } from "../interface/user";
 const userRepository = new UserRepository();
 
 export class UserService {
-  async createUser(data: Omit<IUser, 'id' | 'createdAt' | 'updatedAt'>): Promise<IUser> {
+  async createUser(
+    data: Omit<IUser, "id" | "createdAt" | "updatedAt">
+  ): Promise<IUser> {
     return userRepository.createUser(data);
   }
 

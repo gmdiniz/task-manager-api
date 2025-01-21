@@ -1,31 +1,35 @@
-import { PrismaClient, Task } from "@prisma/client";
+import { Task as PrismaTask } from "@prisma/client";
+import { ITask } from "../interface/task";
+import { TaskDTO } from "../interface/task";
+
 import prisma from "../clients/prismaClient";
 
 export class TaskRepository {
-  // TODO: User dto instances
-  private prisma: PrismaClient;
+  async createTask(data: Omit<ITask, "id">): Promise<PrismaTask> {
+    const createdTask = await prisma.task.create({ data });
 
-  constructor() {
-    this.prisma = prisma;
+    return new TaskDTO(createdTask);
   }
 
-  async createTask(data: Omit<Task, "id">): Promise<Task> {
-    return this.prisma.task.create({ data });
+  async getTaskById(id: number): Promise<PrismaTask | null> {
+    const task = await prisma.task.findUnique({ where: { id } });
+
+    return task ? new TaskDTO(task) : null;
   }
 
-  async getTaskById(id: number): Promise<Task | null> {
-    return this.prisma.task.findUnique({ where: { id } });
-  }
+  async updateTask(id: number, data: Partial<ITask>): Promise<PrismaTask> {
+    const updatedTask = await prisma.task.update({ where: { id }, data });
 
-  async updateTask(id: number, data: Partial<Task>): Promise<Task> {
-    return this.prisma.task.update({ where: { id }, data });
+    return new TaskDTO(updatedTask);
   }
 
   async deleteTask(id: number): Promise<void> {
-    await this.prisma.task.delete({ where: { id } });
+    await prisma.task.delete({ where: { id } });
   }
 
-  async listTasks(): Promise<Task[]> {
-    return this.prisma.task.findMany();
+  async listTasks(): Promise<PrismaTask[]> {
+    const tasks = await prisma.task.findMany();
+
+    return tasks.map((task) => new TaskDTO(task));
   }
 }

@@ -1,11 +1,23 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
-});
+class PrismaSingleton {
+  private static instance: PrismaClient;
 
-export default prisma;
+  private constructor() {}
+
+  public static getInstance(): PrismaClient {
+    if (!PrismaSingleton.instance) {
+      PrismaSingleton.instance = new PrismaClient({
+        datasources: {
+          db: {
+            url: process.env.DATABASE_URL,
+          },
+        },
+      });
+    }
+
+    return PrismaSingleton.instance;
+  }
+}
+
+export default PrismaSingleton.getInstance();

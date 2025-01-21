@@ -1,49 +1,50 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import RouterHandler from "../interface/routerHandler";
+import AuthRequest from "../interface/authRequest";
+
+import { AuthService } from "../services/authService";
 
 const router = express.Router();
 
 const config = process.env;
 
 class AuthController {
-  register: RouterHandler = async (req, res) => {
-    try {
-      res.send("User registered!");
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Internal Server Error");
-    }
-  };
+  private authService: AuthService;
+
+  constructor() {
+    this.authService = new AuthService();
+  }
+
   authenticate: RouterHandler = async (req, res) => {
     try {
-      if (req.body.user === "gabriel" && req.body.password === "123") {
-        //TODO: implementar a busca no banco de dados
+      const { usernameOrEmail, password } = req.body;
 
-        const id = 1;
-
-        if (!config.SECRET) {
-          throw new Error("SECRET environment variable is not defined");
-        }
-
-        const token = jwt.sign({ id }, config.SECRET, {
-          expiresIn: 300, // expires in 5min
-        });
-
-        return res.json({ auth: true, token: token });
+      if (!usernameOrEmail || !password) {
+        return res
+          .status(400)
+          .json({ message: "Username or email and password are required" });
       }
 
-      res.status(500).json({ message: "Login inválido!" });
+      const token = await this.authService.login({
+        usernameOrEmail,
+        password,
+      } as AuthRequest);
+
+      return token
+        ? res.status(200).json({ auth: true, token: token })
+        : res.status(500).json({ message: "Invalid login!" });
     } catch (error) {
       console.error(error);
-      res.status(500).send("Internal Server Error");
+
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      res.status(500).send({ message: "Internal Server Error", error: errorMessage });
     }
   };
 }
 
 const authController = new AuthController();
 
-router.post("/register", authController.register);
 router.post("/login", authController.authenticate);
 
 export default router;

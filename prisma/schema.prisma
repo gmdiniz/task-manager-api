@@ -30,20 +30,20 @@ enum Status {
 }
 
 enum Priority {
-    BAIXA
-    MEDIA
-    ALTA
+  BAIXA
+  MEDIA
+  ALTA
 }
 
 model Task {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   description String?
   status      Status
   priority    Priority
-  dueDate     DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
 }
